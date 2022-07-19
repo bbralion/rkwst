@@ -1,0 +1,95 @@
+asyncapi: 2.4.0
+info:
+  title: rkwst ws
+  version: 0.1.0
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+  description: RKWST websocket service providing realtime info about nets.
+servers:
+  public:
+    url: 'rkw.st/api/ws/v1'
+    protocol: wss
+    description: RKWST v1 websocket API
+channels:
+  /:
+    publish:
+      message:
+        oneOf:
+          - $ref: '#/components/messages/subscribe'
+    subscribe:
+      message:
+        $ref: '#/components/messages/net-request'
+components:
+  messages:
+    subscribe:
+      description: 'Subscribe to receive updates about requests caught by specified net'
+      payload:
+        $ref: '#/components/schemas/SubscribeEvent'
+    net-request:
+      description: 'Description of request caught by a net to which the user has subscribed'
+      payload:
+        $ref: '#/components/schemas/NetRequest'
+  schemas:
+    SubscribeEvent:
+      type: object
+      properties:
+        event:
+          type: string
+          const: subscribe
+        netid:
+          $ref: '#/components/schemas/netid'
+    Request:
+      type: object
+      description: Info about a single request to a specific Net.
+      properties:
+        id:
+          type: string
+          format: uuid
+        ip:
+          type: string
+          format: ipv4
+        proto:
+          type: string
+          enum:
+            - http
+            - https
+        timestamp:
+          type: string
+          format: date-time
+        method:
+          type: string
+        uri:
+          type: string
+          format: uri
+        headers:
+          type: object
+          description: 'Map<String, List<String>> from header name to array of values'
+        form:
+          type: object
+          description: 'Map<String, List<String>> from key to array of values'
+        files:
+          type: object
+          properties:
+            filename:
+              type: string
+            headers:
+              type: object
+              description: 'Map<String, List<String>> from header name to array of values'
+            content:
+              type: string
+              format: byte
+        body:
+          type: string
+          format: byte
+    NetRequest:
+      type: object
+      properties:  
+        id:
+          $ref: '#/components/schemas/netid'
+        request:
+          $ref: '#/components/schemas/Request'
+    netid:
+      type: string
+      format: uuid
+      description: 'UUID of the request net'

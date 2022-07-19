@@ -1,0 +1,137 @@
+openapi: 3.0.0
+info:
+  title: rkwst http
+  version: 0.1.0
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+  description: RKWST http service for working with request nets
+servers:
+  - url: 'https://rkw.st/api/v1'
+    description: RKWST v1 API
+paths:
+  /net:
+    post:
+      summary: Create net
+      operationId: post-net
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uuid
+                description: UUID of created net
+                readOnly: true
+      description: Create new request net.
+  '/nets/{id}':
+    get:
+      summary: Get net
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Net'
+      operationId: get-net
+      description: Get net info by its id.
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+        description: UUID of net
+    put:
+      summary: Modify net
+      operationId: modify-net
+      responses:
+        '200':
+          description: OK
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      description: Modify info about net. Currently only the deadline field is writable in order to extend the net lifetime.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Net'
+        description: Description of this net with modified fields.
+components:
+  schemas:
+    Request:
+      title: Request
+      type: object
+      description: Info about a single request to a specific Net.
+      properties:
+        id:
+          type: string
+          format: uuid
+        ip:
+          type: string
+          format: ipv4
+        proto:
+          type: string
+          enum:
+            - http
+            - https
+        timestamp:
+          type: string
+          format: date-time
+        method:
+          type: string
+        uri:
+          type: string
+          format: uri
+        headers:
+          type: object
+          description: 'Map<String, List<String>> from header name to array of values'
+        form:
+          type: object
+          description: 'Map<String, List<String>> from key to array of values'
+        files:
+          type: object
+          properties:
+            filename:
+              type: string
+            headers:
+              type: object
+              description: 'Map<String, List<String>> from header name to array of values'
+            content:
+              type: string
+              format: byte
+        body:
+          type: string
+          format: byte
+    Net:
+      title: Net
+      type: object
+      description: Request net containing all the requests made to it.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        endpoint:
+          type: string
+          format: uri
+          readOnly: true
+        deadline:
+          type: string
+          format: date-time
+        requests:
+          type: array
+          items:
+            $ref: '#/components/schemas/Request'
+          readOnly: true
+    Error:
+      type: string
+      title: Error
+      description: Error message.
+      example: error message
