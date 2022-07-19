@@ -20,10 +20,7 @@ paths:
           content:
             application/json:
               schema:
-                type: string
-                format: uuid
-                description: UUID of created net
-                readOnly: true
+                $ref: '#/components/schemas/Net'
       description: Create new request net.
   '/nets/{id}':
     get:
@@ -67,8 +64,38 @@ components:
   schemas:
     Request:
       title: Request
+      x-stoplight:
+        id: 9njw8o5ri88cl
       type: object
       description: Info about a single request to a specific Net.
+      x-examples:
+        example-1:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          ip: 192.168.0.1
+          proto: http
+          timestamp: '2019-08-24T14:15:22Z'
+          method: string
+          uri: /path?a=1&a=2
+          path: /path
+          headers:
+            Accept:
+              - application/json
+            Content-Type:
+              - multipart/form-data
+          form:
+            a:
+              - '1'
+              - '2'
+          files:
+            attached-file:
+              - filename: file.txt
+                headers:
+                  Content-Type:
+                    - text/plain
+                  Expires:
+                    - '0'
+                content: <base64 of file contents>
+          body: <base64 of body>
       properties:
         id:
           type: string
@@ -89,28 +116,46 @@ components:
         uri:
           type: string
           format: uri
+        path:
+          type: string
+          format: uri-reference
         headers:
           type: object
-          description: 'Map<String, List<String>> from header name to array of values'
+          additionalProperties:
+            type: array
+            items:
+              type: string
         form:
           type: object
-          description: 'Map<String, List<String>> from key to array of values'
+          additionalProperties:
+            type: array
+            items:
+              type: string
         files:
           type: object
-          properties:
-            filename:
-              type: string
-            headers:
+          additionalProperties:
+            type: array
+            items:
               type: object
-              description: 'Map<String, List<String>> from header name to array of values'
-            content:
-              type: string
-              format: byte
+              properties:
+                filename:
+                  type: string
+                headers:
+                  type: object
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+                content:
+                  type: string
+                  format: byte
         body:
           type: string
           format: byte
     Net:
       title: Net
+      x-stoplight:
+        id: f6bswzsmm9o1i
       type: object
       description: Request net containing all the requests made to it.
       properties:
@@ -133,5 +178,7 @@ components:
     Error:
       type: string
       title: Error
+      x-stoplight:
+        id: n48wx3gw0repv
       description: Error message.
       example: error message
