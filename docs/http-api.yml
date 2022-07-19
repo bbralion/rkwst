@@ -13,7 +13,7 @@ paths:
   /net:
     post:
       summary: Create net
-      operationId: post-net
+      operationId: create-net
       responses:
         '201':
           description: Created
@@ -21,6 +21,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Net'
+              examples:
+                example-create-net:
+                  value:
+                    id: ekd8
+                    endpoint: ekd8.rwk.st
+                    deadline: '2019-08-24T14:45:22Z'
+                    requests: []
       description: Create new request net.
   '/nets/{id}':
     get:
@@ -32,15 +39,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Net'
+              examples:
+                example-get-net:
+                  value:
+                    id: ekd8
+                    endpoint: ekd8.rwk.st
+                    deadline: '2019-08-24T14:45:22Z'
+                    requests:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        ip: 192.168.0.1
+                        proto: http
+                        timestamp: '2019-08-24T14:25:22Z'
+                        method: POST
+                        uri: /path?query=param
+                        path: /path
+                        headers:
+                          Content-Type:
+                            - application/x-www-form-urlencoded
+                          User-Agent:
+                            - curl/7.84.0
+                        form:
+                          query:
+                            - param
+                          form:
+                            - param
+                        body: <base64 of body>
       operationId: get-net
-      description: Get net info by its id.
+      description: Get net info by its ID.
     parameters:
       - schema:
           type: string
         name: id
         in: path
         required: true
-        description: UUID of net
+        description: ID of net
     put:
       summary: Modify net
       operationId: modify-net
@@ -53,6 +85,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+              examples:
+                example-modify-net-error:
+                  value: cannot extend the deadline further than 30mins from now
       description: Modify info about net. Currently only the deadline field is writable in order to extend the net lifetime.
       requestBody:
         content:
@@ -69,12 +104,12 @@ components:
       type: object
       description: Info about a single request to a specific Net.
       x-examples:
-        example-1:
+        example-request:
           id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
           ip: 192.168.0.1
           proto: http
           timestamp: '2019-08-24T14:15:22Z'
-          method: string
+          method: POST
           uri: /path?a=1&a=2
           path: /path
           headers:
@@ -161,7 +196,6 @@ components:
       properties:
         id:
           type: string
-          format: uuid
           readOnly: true
         endpoint:
           type: string

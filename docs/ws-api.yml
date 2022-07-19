@@ -47,12 +47,12 @@ components:
       type: object
       description: Info about a single request to a specific Net.
       x-examples:
-        example-1:
+        example-request:
           id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
           ip: 192.168.0.1
           proto: http
           timestamp: '2019-08-24T14:15:22Z'
-          method: string
+          method: POST
           uri: /path?a=1&a=2
           path: /path
           headers:
@@ -139,5 +139,5 @@ components:
           $ref: '#/components/schemas/Request'
     netid:
       type: string
-      format: uuid
-      description: 'UUID of the request net'
+      description: 'ID of the request net'
+      example: '43f2'
