@@ -1,0 +1,27 @@
+{
+  "name": "rkwst-front",
+  "version": "0.1.0",
+  "description": "RKWST frontend",
+  "scripts": {
+    "re:build": "rescript",
+    "re:start": "rescript build -w",
+    "re:clean": "rescript clean -v",
+    "start": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "author": "bbralion",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@jihchi/vite-plugin-rescript": "^4.0.1",
+    "@rescript/react": "^0.10.3",
+    "@vitejs/plugin-react": "^2.0.0",
+    "autoprefixer": "^10.4.7",
+    "postcss": "^8.4.14",
+    "react": "^18.2.0",
+    "rescript": "^9.1.4",
+    "tailwindcss": "^3.1.6",
+    "ts-node": "^10.9.1",
+    "vite": "^3.0.2"
+  }
+}

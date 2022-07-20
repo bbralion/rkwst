@@ -1,0 +1,7 @@
+/node_modules/
+/lib/
+/.vscode/
+/dist/
+.bsb.lock
+.merlin
+.DS_Store
