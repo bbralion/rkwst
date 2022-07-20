@@ -2,6 +2,7 @@
 /lib/
 /.vscode/
 /dist/
+/src/**/*.bs.js
 .bsb.lock
 .merlin
 .DS_Store
