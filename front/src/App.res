@@ -1,4 +1,4 @@
 @react.component
 let make = () => {
-  <div className="text-green-600"> {React.string("Hello world")} </div>
+  <div className="min-h-screen bg-theme-800"> <NetRequestListing /> </div>
 }
