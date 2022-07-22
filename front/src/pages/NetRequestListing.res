@@ -1,4 +1,4 @@
-let mockRequests: array<Model.request> = [
+let mockRequests: array<Model.Request.t> = [
   {
     id: "abobus-1",
     ip: "13.33.33.37",
@@ -21,15 +21,15 @@ let mockRequests: array<Model.request> = [
     query: Some(Map.String.fromArray([("query", ["param"])])),
     form: Some(Map.String.fromArray([("a", ["b"]), ("c", ["d"])])),
     files: None,
-    body: "a=b&c=d",
+    body: "YT1iJmM9ZAo=",
   },
   {
     id: "abobus-2",
-    ip: "13.33.33.37",
+    ip: "192.168.23.123",
     proto: "https",
-    timestamp: Js.Date.fromFloat(Js.Date.now() -. 17000.0),
-    method: "get",
-    uri: "/path?a=b&a=cddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    timestamp: Js.Date.fromFloat(Js.Date.now() -. 72400.0),
+    method: "keeeeeeeeeeeeeeeek",
+    uri: "/path?a=b&a=cdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
     headers: Map.String.fromArray([
       ("Host", ["kek.rwk.st"]),
       ("User-Agent", ["curl/7.22.0"]),
@@ -43,7 +43,7 @@ let mockRequests: array<Model.request> = [
     query: Some(Map.String.fromArray([("a", ["b", "c"])])),
     form: None,
     files: None,
-    body: "a=b&c=d",
+    body: "",
   },
 ]
 
@@ -51,7 +51,7 @@ let mockRequests: array<Model.request> = [
 let make = () => {
   <div className="flex flex-col gap-8 lg:gap-10 px-[5%] py-20">
     {React.array(
-      Array.map(mockRequests, request => {
+      mockRequests->Array.map(request => {
         <RequestCard key=request.id request />
       }),
     )}
