@@ -1,3 +1,13 @@
+module Tag = {
+  @react.component
+  let make = (~text: string) => {
+    <span
+      className="inline-block border-2 border-theme-500 rounded-md px-4 py-[2px] uppercase break-all text-3xl text-white">
+      {React.string(text)}
+    </span>
+  }
+}
+
 // All values formattable in the body section of the card
 type formattable = RequestValues(Model.Request.values) | Timestamp(Js.Date.t)
 
@@ -50,9 +60,7 @@ let make = (~request: Model.Request.t) => {
             // In the future other tags might be supported
             React.array(
               [("proto", request.proto), ("method", request.method)]->Array.map(((k, v)) =>
-                <span className="inline-block mb-2 mr-2 last:mr-0" key=k>
-                  <RequestTag text=v />
-                </span>
+                <span className="inline-block mb-2 mr-2 last:mr-0" key=k> <Tag text=v /> </span>
               ),
             )
           }
@@ -63,7 +71,9 @@ let make = (~request: Model.Request.t) => {
       <p
         className="md:col-span-1 md:py-[3px] flex flex-wrap content-start items-center md:justify-end gap-x-3">
         <span className="text-white opacity-60"> {React.string("FROM")} </span>
-        <span className="text-white text-2xl"> {React.string(request.ip)} </span>
+        <span className="text-white text-2xl md:text-xl lg:text-2xl">
+          {React.string(request.ip)}
+        </span>
       </p>
       <hr className="md:col-span-4 border-black" />
       // Headers and formatted body content
