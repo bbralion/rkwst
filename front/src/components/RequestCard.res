@@ -9,7 +9,7 @@ module Tag = {
 }
 
 // All values formattable in the body section of the card
-type formattable = RequestValues(Model.Request.values) | Timestamp(Js.Date.t)
+type formattable = RequestValues(Model.Request.values) | Timestamp({t: Js.Date.t, now: float})
 
 let format = (v: formattable) => {
   switch v {
@@ -27,11 +27,11 @@ let format = (v: formattable) => {
       </p>
     )
     ->React.array
-  | Timestamp(t) => {
+  | Timestamp({t, now}) => {
       let formatPlural = (a: float, t: string) =>
         `${a->Float.toInt->Int.toString} ${a < 2. ? t : t ++ "s"} ago`
 
-      let diff = Js.Date.now() -. t->Js.Date.getTime
+      let diff = now -. t->Js.Date.getTime
       React.string(
         if diff < 1. *. 1000. {
           "less than a second ago"
@@ -51,6 +51,12 @@ let format = (v: formattable) => {
 
 @react.component
 let make = (~request: Model.Request.t) => {
+  let (now, updateNow) = React.useState(() => Js.Date.now())
+  React.useEffect(() => {
+    let timerId = Js.Global.setInterval(() => updateNow(_ => Js.Date.now()), 10 * 1000)
+    Some(() => Js.Global.clearInterval(timerId))
+  })
+
   <div className="rounded-lg py-5 px-8 bg-theme-700">
     <div className="grid grid-cols-1 md:grid-cols-4 gap-y-5 gap-x-3">
       // Tags and URI
@@ -106,7 +112,7 @@ let make = (~request: Model.Request.t) => {
       </p>
       <p
         className="md:col-span-1 text-white text-lg break-all opacity-80 font-light flex content-end items-center md:justify-end">
-        {format(Timestamp(request.timestamp))}
+        {format(Timestamp({t: request.timestamp, now: now}))}
       </p>
     </div>
   </div>
