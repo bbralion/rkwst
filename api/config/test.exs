@@ -1,16 +1,14 @@
-use Mix.Config
+import Config
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
-config :rest_api, RestApi.Endpoint,
-  http: [port: 4001],
+config :rkwst, RkwstWeb.Endpoint,
+  http: [ip: {127, 0, 0, 1}, port: 4002],
+  secret_key_base: "EfvavOKyNQeggrU50Fm83YbFwB9T9yZav2OfU9MPmCYqew6jdThAzM6gxyPoo5lh",
   server: false
 
 # Print only warnings and errors during test
 config :logger, level: :warn
 
-# Configure your database
-config :rest_api, RestApi.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  url: {:system, "DATABASE_URL"},
-  pool: Ecto.Adapters.SQL.Sandbox
+# Initialize plugs at runtime for faster test compilation
+config :phoenix, :plug_init_mode, :runtime
