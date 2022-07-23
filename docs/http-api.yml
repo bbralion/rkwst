@@ -71,7 +71,7 @@ paths:
       description: Get bin info by its ID.
     parameters:
       - schema:
-          type: string
+          $ref: '#/components/schemas/ID'
         name: id
         in: path
         required: true
@@ -107,13 +107,13 @@ paths:
   '/bins/{id}/requests':
     parameters:
       - schema:
-          type: string
+          $ref: '#/components/schemas/ID'
         name: id
         in: path
         required: true
         description: ID of bin
     get:
-      summary: Your GET endpoint
+      summary: Get bin requests
       responses:
         '200':
           description: OK
