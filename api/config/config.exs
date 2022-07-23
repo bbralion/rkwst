@@ -7,6 +7,9 @@
 # General application configuration
 import Config
 
+config :rkwst,
+       ecto_repos: [Rkwst.Repo]
+
 # Configures the endpoint
 config :rkwst, RkwstWeb.Endpoint,
   url: [host: "localhost"],

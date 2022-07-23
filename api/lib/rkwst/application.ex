@@ -8,6 +8,8 @@ defmodule Rkwst.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      # Start the Ecto repository
+      Rkwst.Repo,
       # Start the Telemetry supervisor
       RkwstWeb.Telemetry,
       # Start the PubSub system

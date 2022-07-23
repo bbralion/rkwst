@@ -31,6 +31,7 @@ defmodule RkwstWeb do
     quote do
       use Phoenix.Controller, namespace: RkwstWeb
 
+      alias Rkwst.Repo
       import Plug.Conn
       alias RkwstWeb.Router.Helpers, as: Routes
     end
