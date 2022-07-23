@@ -1,7 +1,7 @@
-defmodule RkwstWeb.Net do
+defmodule RkwstWeb.Bin do
   use RkwstWeb, :model
 
-  schema "nets" do
+  schema "bins" do
     field :endpoint, :string
     field :deadline, :string
 

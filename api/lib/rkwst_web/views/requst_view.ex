@@ -20,7 +20,7 @@ defmodule RkwstWeb.RequestView do
       headers: request.headers,
       form: request.form,
       body: request.body,
-      net_id: request.net_id
+      bin_id: request.bin_id
     }
   end
 end

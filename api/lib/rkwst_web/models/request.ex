@@ -11,12 +11,12 @@ defmodule RkwstWeb.Request do
     field :form, :map
     field :body, :string
 
-    belongs_to :net, RkwstWeb.Net
+    belongs_to :bin, RkwstWeb.Bin
 
     timestamps
   end
 
-  @required_fields ~w(id ip proto timestamp method uri headers form body net_id)a
+  @required_fields ~w(id ip proto timestamp method uri headers form body bin_id)a
   @optional_fields ~w()
 
   @doc """
