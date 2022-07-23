@@ -11,6 +11,7 @@ defmodule RkwstWeb.RequestView do
 
   def render("request.json", %{request: request}) do
     %{
+      id: request.id,
       ip: request.ip,
       proto: request.proto,
       timestamp: request.timestamp,
@@ -18,7 +19,8 @@ defmodule RkwstWeb.RequestView do
       uri: request.uri,
       headers: request.headers,
       form: request.form,
-      body: request.body
+      body: request.body,
+      net_id: request.net_id
     }
   end
 end

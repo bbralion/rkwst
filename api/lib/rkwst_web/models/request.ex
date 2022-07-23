@@ -16,7 +16,7 @@ defmodule RkwstWeb.Request do
     timestamps
   end
 
-  @required_fields ~w(ip proto timestamp method uri headers form body)a
+  @required_fields ~w(id ip proto timestamp method uri headers form body net_id)a
   @optional_fields ~w()
 
   @doc """
