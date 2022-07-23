@@ -22,6 +22,8 @@ defmodule RkwstWeb.Router do
     scope "/" do
       pipe_through [:fetch_session, :protect_from_forgery]
 
+      resources "/nets", RkwstWeb.NetController
+      resources "/requests", RkwstWeb.RequestController
       live_dashboard "/dashboard", metrics: RkwstWeb.Telemetry
     end
   end
