@@ -5,7 +5,7 @@ info:
   license:
     name: Apache 2.0
     url: 'https://www.apache.org/licenses/LICENSE-2.0.txt'
-  description: RKWST websocket service providing realtime info about nets.
+  description: RKWST websocket API providing realtime info about bins.
 servers:
   public:
     url: 'rkw.st/api/ws/v1'
@@ -20,32 +20,33 @@ channels:
     subscribe:
       message:
         oneOf:
-          - $ref: '#/components/messages/net-request'
+          - $ref: '#/components/messages/bin-request'
 components:
   messages:
     subscribe:
-      description: 'Subscribe to receive updates about requests caught by specified net'
+      description: 'Subscribe to receive updates about requests caught by specified bin'
       payload:
         $ref: '#/components/schemas/SubscribeEvent'
-    net-request:
-      description: 'Description of request caught by a net to which the user has subscribed'
+    bin-request:
+      description: 'Description of request caught by a bin to which the user has subscribed'
       payload:
-        $ref: '#/components/schemas/NetRequest'
+        $ref: '#/components/schemas/Request'
   schemas:
     SubscribeEvent:
       type: object
+      description: Subscription to bin requests via bin id
       properties:
         event:
           type: string
           const: subscribe
-        netid:
-          $ref: '#/components/schemas/netid'
+        binid:
+          $ref: '#/components/schemas/ID'
     Request:
       title: Request
       x-stoplight:
         id: 9njw8o5ri88cl
       type: object
-      description: Info about a single request to a specific Net.
+      description: Info about a single request to a specific Bin.
       x-examples:
         example-request:
           id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
@@ -76,39 +77,45 @@ components:
           body: <base64 of body>
       properties:
         id:
-          type: string
-          format: uuid
+          $ref: '#/components/schemas/ID'
+        binid:
+          $ref: '#/components/schemas/ID'
         ip:
           type: string
           format: ipv4
+          readOnly: true
         proto:
           type: string
           enum:
             - http
             - https
+          readOnly: true
         timestamp:
           type: string
           format: date-time
+          readOnly: true
         method:
           type: string
+          readOnly: true
         uri:
           type: string
           format: uri
-        path:
-          type: string
-          format: uri-reference
+          readOnly: true
         headers:
           type: object
           additionalProperties:
             type: array
             items:
               type: string
+          readOnly: true
         form:
           type: object
           additionalProperties:
             type: array
             items:
               type: string
+          nullable: true
+          readOnly: true
         files:
           type: object
           additionalProperties:
@@ -127,17 +134,17 @@ components:
                 content:
                   type: string
                   format: byte
+          nullable: true
+          readOnly: true
         body:
           type: string
           format: byte
-    NetRequest:
-      type: object
-      properties:  
-        id:
-          $ref: '#/components/schemas/netid'
-        request:
-          $ref: '#/components/schemas/Request'
-    netid:
+          readOnly: true
+    ID:
       type: string
-      description: 'ID of the request net'
-      example: '43f2'
+      title: ID
+      x-stoplight:
+        id: jxq057d7vgwlj
+      description: Entity id. All ids are in the form of uuid's.
+      format: uuid
+      readOnly: true

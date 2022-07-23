@@ -5,44 +5,41 @@ info:
   license:
     name: Apache 2.0
     url: 'https://www.apache.org/licenses/LICENSE-2.0.txt'
-  description: RKWST http service for working with request nets
+  description: RKWST http API for working with request bins
 servers:
   - url: 'https://rkw.st/api/v1'
     description: RKWST v1 API
 paths:
-  /net:
+  /bin:
     post:
-      summary: Create net
-      operationId: create-net
+      summary: Create bin
+      operationId: create-bin
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Net'
+                $ref: '#/components/schemas/ID'
               examples:
-                example-create-net:
-                  value:
-                    id: ekd8
-                    endpoint: ekd8.rwk.st
-                    deadline: '2019-08-24T14:45:22Z'
-                    requests: []
-      description: Create new request net.
-  '/nets/{id}':
+                example-created-id:
+                  value: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+      description: Create new request bin.
+    parameters: []
+  '/bins/{id}':
     get:
-      summary: Get net
+      summary: Get bin
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Net'
+                $ref: '#/components/schemas/Bin'
               examples:
-                example-get-net:
+                example-get-bin:
                   value:
-                    id: ekd8
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                     endpoint: ekd8.rwk.st
                     deadline: '2019-08-24T14:45:22Z'
                     requests:
@@ -64,21 +61,33 @@ paths:
                           form:
                             - param
                         body: <base64 of body>
-      operationId: get-net
-      description: Get net info by its ID.
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: get-bin
+      description: Get bin info by its ID.
     parameters:
       - schema:
           type: string
         name: id
         in: path
         required: true
-        description: ID of net
+        description: ID of bin
     put:
-      summary: Modify net
-      operationId: modify-net
+      summary: Modify bin
+      operationId: modify-bin
       responses:
         '200':
           description: OK
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '409':
           description: Conflict
           content:
@@ -86,15 +95,70 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               examples:
-                example-modify-net-error:
+                example-modify-bin-error:
                   value: cannot extend the deadline further than 30mins from now
-      description: Modify info about net. Currently only the deadline field is writable in order to extend the net lifetime.
+      description: Modify info about bin. Currently only the deadline field is writable in order to extend the bin lifetime.
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Net'
-        description: Description of this net with modified fields.
+              $ref: '#/components/schemas/Bin'
+        description: Description of this bin with modified fields.
+  '/bins/{id}/requests':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+        description: ID of bin
+    get:
+      summary: Your GET endpoint
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Request'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                example-get-bin-requests-error:
+                  value: request with id specified in before doesn't exist in the bin
+      operationId: get-bin-requests
+      description: Paginated list of requests to specified bin. Requests are always returned sorted from newest to oldest.
+      parameters:
+        - schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+          in: query
+          name: limit
+          description: Maximum number of requests returned
+        - schema:
+            $ref: '#/components/schemas/ID'
+          in: query
+          name: before
+          description: Exclusive with after. ID of request specifying the upper bound of requests to be returned.
+        - schema:
+            $ref: '#/components/schemas/ID'
+          in: query
+          name: after
+          description: Exclusive with before. ID of request specifying the lower bound of requests to be returned.
 components:
   schemas:
     Request:
@@ -102,7 +166,7 @@ components:
       x-stoplight:
         id: 9njw8o5ri88cl
       type: object
-      description: Info about a single request to a specific Net.
+      description: Info about a single request to a specific Bin.
       x-examples:
         example-request:
           id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
@@ -133,39 +197,45 @@ components:
           body: <base64 of body>
       properties:
         id:
-          type: string
-          format: uuid
+          $ref: '#/components/schemas/ID'
+        binid:
+          $ref: '#/components/schemas/ID'
         ip:
           type: string
           format: ipv4
+          readOnly: true
         proto:
           type: string
           enum:
             - http
             - https
+          readOnly: true
         timestamp:
           type: string
           format: date-time
+          readOnly: true
         method:
           type: string
+          readOnly: true
         uri:
           type: string
           format: uri
-        path:
-          type: string
-          format: uri-reference
+          readOnly: true
         headers:
           type: object
           additionalProperties:
             type: array
             items:
               type: string
+          readOnly: true
         form:
           type: object
           additionalProperties:
             type: array
             items:
               type: string
+          nullable: true
+          readOnly: true
         files:
           type: object
           additionalProperties:
@@ -184,30 +254,42 @@ components:
                 content:
                   type: string
                   format: byte
+          nullable: true
+          readOnly: true
         body:
           type: string
           format: byte
-    Net:
-      title: Net
+          readOnly: true
+    Bin:
+      title: Bin
       x-stoplight:
         id: f6bswzsmm9o1i
       type: object
-      description: Request net containing all the requests made to it.
+      description: 'Description of a single request bin, without the list of the requests contained inside.'
       properties:
         id:
-          type: string
-          readOnly: true
+          $ref: '#/components/schemas/ID'
         endpoint:
           type: string
-          format: uri
+          format: hostname
+          description: 'Endpoint in the form "random hex".rkw.st; NB: not related to the bin id'
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        last:
+          type: string
+          format: date-time
+          description: Cached timestamp of last request made to the bin.
+          nullable: true
           readOnly: true
         deadline:
           type: string
           format: date-time
-        requests:
-          type: array
-          items:
-            $ref: '#/components/schemas/Request'
+        count:
+          type: integer
+          description: Cached total number of requests made to this bin.
           readOnly: true
     Error:
       type: string
@@ -216,3 +298,11 @@ components:
         id: n48wx3gw0repv
       description: Error message.
       example: error message
+    ID:
+      type: string
+      title: ID
+      x-stoplight:
+        id: jxq057d7vgwlj
+      description: Entity id. All ids are in the form of uuid's.
+      format: uuid
+      readOnly: true
