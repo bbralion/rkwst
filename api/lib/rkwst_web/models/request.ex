@@ -1,8 +1,7 @@
 defmodule RkwstWeb.Request do
   use RkwstWeb, :model
 
-  schema "request" do
-#    field :id, :string
+  schema "requests" do
     field :ip, :string
     field :proto, :string
     field :timestamp, :string
@@ -12,12 +11,12 @@ defmodule RkwstWeb.Request do
     field :form, :map
     field :body, :string
 
-    belongs_to :net, RestApi.Net
+    belongs_to :net, RkwstWeb.Net
 
     timestamps
   end
 
-  @required_fields ~w(id ip proto timestamp method uri headers form body)
+  @required_fields ~w(ip proto timestamp method uri headers form body)a
   @optional_fields ~w()
 
   @doc """
@@ -28,6 +27,6 @@ defmodule RkwstWeb.Request do
   """
   def changeset(model, params \\ :empty) do
     model
-    |> cast(params, @required_fields, @optional_fields)
+    |> cast(params, @required_fields ++ @optional_fields)
   end
 end

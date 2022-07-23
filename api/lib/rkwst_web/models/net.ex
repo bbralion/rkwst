@@ -1,8 +1,7 @@
 defmodule RkwstWeb.Net do
   use RkwstWeb, :model
 
-  schema "request" do
-#    field :id, :string
+  schema "nets" do
     field :endpoint, :string
     field :deadline, :string
 
@@ -10,7 +9,7 @@ defmodule RkwstWeb.Net do
     timestamps
   end
 
-  @required_fields ~w(id endpoint deadline)
+  @required_fields ~w(endpoint deadline)a
   @optional_fields ~w()
 
   @doc """
@@ -21,6 +20,6 @@ defmodule RkwstWeb.Net do
   """
   def changeset(model, params \\ :empty) do
     model
-    |> cast(params, @required_fields, @optional_fields)
+    |> cast(params, @required_fields ++ @optional_fields)
   end
 end
