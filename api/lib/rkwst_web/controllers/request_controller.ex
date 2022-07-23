@@ -10,6 +10,7 @@ defmodule RkwstWeb.RequestController do
       %{
         id: "r_id1",
         ip: "r_ip1",
+        proto: "r_proto1",
         deadline: "r_dead1",
         timestamp: "r_ts1",
         method: "r_m1",
@@ -26,6 +27,7 @@ defmodule RkwstWeb.RequestController do
     request = %{
       id: "r_id1",
       ip: "r_ip1",
+      proto: "r_proto1",
       deadline: "r_dead1",
       timestamp: "r_ts1",
       method: "r_m1",
