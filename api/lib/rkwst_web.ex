@@ -32,7 +32,6 @@ defmodule RkwstWeb do
       use Phoenix.Controller, namespace: RkwstWeb
 
       import Plug.Conn
-      import RkwstWeb.Gettext
       alias RkwstWeb.Router.Helpers, as: Routes
     end
   end
@@ -64,7 +63,6 @@ defmodule RkwstWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import RkwstWeb.Gettext
     end
   end
 
@@ -74,7 +72,6 @@ defmodule RkwstWeb do
       import Phoenix.View
 
       import RkwstWeb.ErrorHelpers
-      import RkwstWeb.Gettext
       alias RkwstWeb.Router.Helpers, as: Routes
     end
   end
