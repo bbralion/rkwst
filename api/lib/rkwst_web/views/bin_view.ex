@@ -8,6 +8,9 @@ defmodule RkwstWeb.BinView do
   def render("show.json", %{bin: bin}) do
     %{data: render_one(bin, RkwstWeb.BinView, "bin.json")}
   end
+  def render("show.json", %{id: id}) do
+    id
+  end
 
   def render("bin.json", %{bin: bin}) do
     %{

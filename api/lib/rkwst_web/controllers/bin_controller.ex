@@ -3,20 +3,23 @@ defmodule RkwstWeb.BinController do
 
   alias RkwstWeb.Bin
 
-  plug :scrub_params, "bin" when action in [:create, :update]
 
   def index(conn, _params) do
     bins = Repo.all(Bin)
     render(conn, "index.json", bins: bins)
   end
 
-  def create(conn, %{"bin" => bin_params}) do
+  def create(conn, _params) do
+    bin_params = %{
+      endpoint: "rkw.st",
+      deadline: DateTime.utc_now
+    }
     changeset = Bin.changeset(%Bin{}, bin_params)
     case Repo.insert(changeset) do
       {:ok, bin} ->
         conn
         |> put_status(:created)
-        |> render("show.json", bin: bin)
+        |> render("show.json", id: bin.id)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
