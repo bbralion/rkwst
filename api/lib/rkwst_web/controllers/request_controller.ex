@@ -25,7 +25,15 @@ defmodule RkwstWeb.RequestController do
   end
 
   def show(conn, %{"id" => id}) do
-    request = Repo.get!(Request, id)
-    render(conn, "show.json", request: request)
+    case Repo.get(Request, id) do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> put_view(RkwstWeb.ErrorView)
+        |> render("404.json", [])
+      %Request{} = request ->
+        conn
+        |> render("show.json", request: request)
+    end
   end
 end

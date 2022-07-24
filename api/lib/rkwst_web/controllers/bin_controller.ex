@@ -28,7 +28,15 @@ defmodule RkwstWeb.BinController do
   end
 
   def show(conn, %{"id" => id}) do
-    bin = Repo.get!(Bin, id)
-    render(conn, "show.json", bin: bin)
+    case Repo.get(Bin, id) do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> put_view(RkwstWeb.ErrorView)
+        |> render("404.json", [])
+      %Bin{} = bin ->
+        conn
+        |> render("show.json", bin: bin)
+    end
   end
 end
