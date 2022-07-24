@@ -1,6 +1,7 @@
 defmodule RkwstWeb.Request do
   use RkwstWeb, :model
 
+  @primary_key {:id, Ecto.UUID, autogenerate: true}
   schema "requests" do
     field :ip, :string
     field :proto, :string
@@ -11,7 +12,7 @@ defmodule RkwstWeb.Request do
     field :form, :map
     field :body, :string
 
-    belongs_to :bin, RkwstWeb.Bin
+    belongs_to :bin, RkwstWeb.Bin, type: Ecto.UUID
 
     timestamps
   end
@@ -28,5 +29,6 @@ defmodule RkwstWeb.Request do
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields ++ @optional_fields)
+    |> foreign_key_constraint(:bin_id)
   end
 end

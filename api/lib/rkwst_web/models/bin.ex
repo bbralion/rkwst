@@ -1,6 +1,7 @@
 defmodule RkwstWeb.Bin do
   use RkwstWeb, :model
 
+  @primary_key {:id, Ecto.UUID, autogenerate: true}
   schema "bins" do
     field :endpoint, :string
     field :deadline, :string
