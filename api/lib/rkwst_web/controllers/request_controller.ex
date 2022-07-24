@@ -10,8 +10,8 @@ defmodule RkwstWeb.RequestController do
     render(conn, "index.json", requests: requests)
   end
 
-  def create(conn, %{"request" => request_params}) do
-    changeset = Request.changeset(%Request{}, request_params)
+  def create(conn, %{"request" => request_params, "id" => bin_id}) do
+    changeset = Request.changeset(%Request{}, Map.put(request_params, "bin_id", bin_id))
     case Repo.insert(changeset) do
       {:ok, request} ->
         conn

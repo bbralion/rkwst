@@ -19,11 +19,24 @@ defmodule RkwstWeb.Router do
   if Mix.env() in [:dev, :test] do
     import Phoenix.LiveDashboard.Router
 
+    scope "/api", RkwstWeb, as: :api do
+      pipe_through :api
+
+      scope "/v1", as: :v1 do
+        get "/bins", BinController, :index
+        get "/bins/:id", BinController, :show
+        put "/bins/:id", BinController, :update
+        post "/bins", BinController, :create
+
+        get "/requests", RequestController, :index # for debug
+        get "/bins/:id/requests", RequestController, :show
+        post "/bins/:id/requests", RequestController, :create # for debug
+      end
+    end
+
     scope "/" do
       pipe_through [:fetch_session, :protect_from_forgery]
 
-      resources "/bins", RkwstWeb.BinController
-      resources "/requests", RkwstWeb.RequestController
       live_dashboard "/dashboard", metrics: RkwstWeb.Telemetry
     end
   end
