@@ -1,7 +1,7 @@
 defmodule RkwstWeb.BinController do
   use RkwstWeb, :controller
 
-  alias RkwstWeb.Bin
+  alias RkwstWeb.Models.Bin
 
 
   def index(conn, _params) do

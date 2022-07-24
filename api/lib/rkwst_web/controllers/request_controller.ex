@@ -1,7 +1,7 @@
 defmodule RkwstWeb.RequestController do
   use RkwstWeb, :controller
 
-  alias RkwstWeb.Request
+  alias RkwstWeb.Models.Request
 
   plug :scrub_params, "request" when action in [:create, :update]
 
