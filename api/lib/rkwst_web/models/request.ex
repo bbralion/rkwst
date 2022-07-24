@@ -1,20 +1,21 @@
 defmodule RkwstWeb.Request do
   use RkwstWeb, :model
 
-  @primary_key {:id, Ecto.UUID, autogenerate: true}
+  alias RkwstWeb.{IPv4}
+  alias Ecto.{Enum, UUID}
+
+  @primary_key {:id, UUID, autogenerate: true}
   schema "requests" do
-    field :ip, RkwstWeb.IPv4
-    field :proto, Ecto.Enum, values: [:http, :https]
+    field :ip, IPv4
+    field :proto, Enum, values: [:http, :https]
     field :timestamp, :utc_datetime
-    field :method, :string
+    field :method, Enum, values: [:GET, :POST, :DELETE, :PUT, :HEAD, :OPTIONS, :PATCH, :TRACE, :CONNECT]
     field :uri, :string
     field :headers, :map
     field :form, :map
     field :body, :string
 
-    belongs_to :bin, RkwstWeb.Bin, type: Ecto.UUID
-
-    timestamps
+    belongs_to :bin, RkwstWeb.Bin, type: UUID
   end
 
   @required_fields ~w(ip proto timestamp method uri headers form body bin_id)a

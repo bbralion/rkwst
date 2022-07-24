@@ -6,8 +6,6 @@ defmodule Rkwst.Repo.Migrations.CreateBinTable do
       add :id, :uuid, primary_key: true, null: false
       add :endpoint, :string
       add :deadline, :string
-
-      timestamps
     end
   end
 end

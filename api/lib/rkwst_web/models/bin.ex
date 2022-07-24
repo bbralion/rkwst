@@ -1,13 +1,14 @@
 defmodule RkwstWeb.Bin do
   use RkwstWeb, :model
 
-  @primary_key {:id, Ecto.UUID, autogenerate: true}
+  alias Ecto.UUID
+
+  @primary_key {:id, UUID, autogenerate: true}
   schema "bins" do
     field :endpoint, :string
-    field :deadline, :string
+    field :deadline, :utc_datetime
 
     has_many :requests, RkwstWeb.Request
-    timestamps
   end
 
   @required_fields ~w(endpoint deadline)a
@@ -22,5 +23,6 @@ defmodule RkwstWeb.Bin do
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields ++ @optional_fields)
+    |> validate_required(@required_fields)
   end
 end

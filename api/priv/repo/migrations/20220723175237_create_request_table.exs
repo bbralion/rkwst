@@ -13,8 +13,6 @@ defmodule Rkwst.Repo.Migrations.CreateRequestTable do
       add :form, :map
       add :body, :string
       add :bin_id, references(:bins, type: :uuid, on_delete: :delete_all)
-
-      timestamps
     end
 
     create index(:requests, [:bin_id])
