@@ -11,6 +11,7 @@ defmodule Rkwst.Repo.Migrations.CreateRequestTable do
       add :uri, :string
       add :headers, :map
       add :form, :map
+      add :files, :map
       add :body, :string
       add :bin_id, references(:bins, type: :uuid, on_delete: :delete_all)
     end

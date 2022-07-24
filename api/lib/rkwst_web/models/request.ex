@@ -13,12 +13,13 @@ defmodule RkwstWeb.Request do
     field :uri, :string
     field :headers, :map
     field :form, :map
+    field :files, :map
     field :body, :string
 
     belongs_to :bin, RkwstWeb.Bin, type: UUID
   end
 
-  @required_fields ~w(ip proto timestamp method uri headers form body bin_id)a
+  @required_fields ~w(ip proto timestamp method uri headers form files body bin_id)a
   @optional_fields ~w()
 
   @doc """
