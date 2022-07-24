@@ -5,7 +5,7 @@ defmodule Rkwst.Repo.Migrations.CreateBinTable do
     create table(:bins, primary_key: false) do
       add :id, :uuid, primary_key: true, null: false
       add :endpoint, :string
-      add :deadline, :string
+      add :deadline, :utc_datetime
     end
   end
 end
