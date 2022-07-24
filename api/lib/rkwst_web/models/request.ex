@@ -3,9 +3,9 @@ defmodule RkwstWeb.Request do
 
   @primary_key {:id, Ecto.UUID, autogenerate: true}
   schema "requests" do
-    field :ip, :string
-    field :proto, :string
-    field :timestamp, :string
+    field :ip, RkwstWeb.IPv4
+    field :proto, Ecto.Enum, values: [:http, :https]
+    field :timestamp, :utc_datetime
     field :method, :string
     field :uri, :string
     field :headers, :map
@@ -17,7 +17,7 @@ defmodule RkwstWeb.Request do
     timestamps
   end
 
-  @required_fields ~w(id ip proto timestamp method uri headers form body bin_id)a
+  @required_fields ~w(ip proto timestamp method uri headers form body bin_id)a
   @optional_fields ~w()
 
   @doc """
@@ -29,6 +29,7 @@ defmodule RkwstWeb.Request do
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields ++ @optional_fields)
+    |> validate_required(@required_fields)
     |> foreign_key_constraint(:bin_id)
   end
 end

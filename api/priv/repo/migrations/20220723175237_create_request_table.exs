@@ -4,9 +4,9 @@ defmodule Rkwst.Repo.Migrations.CreateRequestTable do
   def change do
     create table(:requests, primary_key: false) do
       add :id, :uuid, primary_key: true, null: false
-      add :ip, :string
+      add :ip, :inet, default: fragment("'0.0.0.0'::inet")
       add :proto, :string
-      add :timestamp, :string
+      add :timestamp, :utc_datetime
       add :method, :string
       add :uri, :string
       add :headers, :map
