@@ -1,9 +1,19 @@
-// Temporarily use interop until React 18 is supported
-%%raw(`
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { make as App } from "./App.bs";
+// Setup Font Awesome using wrapper around the SVG core
+@module("./js/fontawesome.js") external setupFontAwesome: unit => unit = "setupFontAwesome"
+setupFontAwesome()
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(React.createElement(React.StrictMode, null, React.createElement(App)));
-`)
+// Temporarily use interop until React 18 is supported
+module React18 = {
+  module Root = {
+    type t
+
+    @send external render: (t, React.element) => unit = "render"
+  }
+}
+
+module ReactDOM18 = {
+  @module("react-dom/client") external createRoot: Dom.element => React18.Root.t = "createRoot"
+}
+
+let root = ReactDOM18.createRoot(ReactDOM.querySelector("#root")->Option.getExn)
+React18.Root.render(root, <App />)

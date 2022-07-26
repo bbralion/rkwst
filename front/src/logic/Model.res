@@ -10,7 +10,7 @@ module Request = {
   }
   type files = Map.String.t<array<file>>
 
-  // Representation of a single request made to a request net
+  // Representation of a single request made to a request bin
   type t = {
     id: string,
     ip: string,
@@ -23,5 +23,17 @@ module Request = {
     form: option<values>,
     files: option<files>,
     body: string,
+  }
+}
+
+module Bin = {
+  // Information about a single request bin
+  type t = {
+    id: string,
+    endpoint: string,
+    created: Js.Date.t,
+    last: option<Js.Date.t>,
+    deadline: Js.Date.t,
+    count: int,
   }
 }
