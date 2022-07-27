@@ -2,30 +2,16 @@ defmodule RkwstWeb.RequestController do
   use RkwstWeb, :controller
 
   alias RkwstWeb.Models.Request
+  alias RkwstWeb.Services.RequestService
 
   plug :scrub_params, "request" when action in [:create, :update]
 
   def index(conn, _params) do
-    requests = Repo.all(Request)
-    render(conn, "index.json", requests: requests)
-  end
-
-  def create(conn, %{"request" => request_params, "id" => bin_id}) do
-    changeset = Request.changeset(%Request{}, Map.put(request_params, "bin_id", bin_id))
-    case Repo.insert(changeset) do
-      {:ok, request} ->
-        conn
-        |> put_status(:created)
-        |> render("show.json", request: request)
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(RkwstWeb.ChangesetView, "error.json", changeset: changeset)
-    end
+    render(conn, "index.json", requests: RequestService.get_all())
   end
 
   def show(conn, %{"id" => id}) do
-    case Repo.get(Request, id) do
+    case RequestService.get(id) do
       nil ->
         conn
         |> put_status(:not_found)

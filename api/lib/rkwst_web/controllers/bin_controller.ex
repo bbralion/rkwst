@@ -2,20 +2,15 @@ defmodule RkwstWeb.BinController do
   use RkwstWeb, :controller
 
   alias RkwstWeb.Models.Bin
+  alias RkwstWeb.Services.BinService
 
 
   def index(conn, _params) do
-    bins = Repo.all(Bin)
-    render(conn, "index.json", bins: bins)
+    render(conn, "index.json", bins: BinService.get_all())
   end
 
   def create(conn, _params) do
-    bin_params = %{
-      endpoint: "rkw.st",
-      deadline: DateTime.utc_now
-    }
-    changeset = Bin.changeset(%Bin{}, bin_params)
-    case Repo.insert(changeset) do
+    case BinService.create() do
       {:ok, bin} ->
         conn
         |> put_status(:created)
@@ -28,7 +23,7 @@ defmodule RkwstWeb.BinController do
   end
 
   def show(conn, %{"id" => id}) do
-    case Repo.get(Bin, id) do
+    case BinService.get(id) do
       nil ->
         conn
         |> put_status(:not_found)
