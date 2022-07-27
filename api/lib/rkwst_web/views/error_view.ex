@@ -5,6 +5,10 @@ defmodule RkwstWeb.ErrorView do
      %{errors: %{detail: "There is no bin with given id"}}
    end
 
+   def render("500.json", _assigns) do
+     %{errors: %{detail: "Internal Server Error"}}
+   end
+
   # If you want to customize a particular status code
   # for a certain format, you may uncomment below.
   # def render("500.json", _assigns) do
