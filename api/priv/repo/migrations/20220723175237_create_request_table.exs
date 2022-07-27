@@ -17,5 +17,6 @@ defmodule Rkwst.Repo.Migrations.CreateRequestTable do
     end
 
     create index(:requests, [:bin_id])
+    create index(:requests, :timestamp)
   end
 end

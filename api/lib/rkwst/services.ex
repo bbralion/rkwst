@@ -26,8 +26,6 @@ defmodule RkwstWeb.Services.BinService do
     end
   end
 
-
-
   def get(id) do
     Repo.get(Bin, id)
   rescue
@@ -61,6 +59,7 @@ defmodule RkwstWeb.Services.BinService do
 end
 
 defmodule RkwstWeb.Services.RequestService do
+  import Ecto.Query
   alias Ecto.Changeset
   alias Rkwst.Repo
   alias RkwstWeb.Models.{Bin, Request}
@@ -85,12 +84,45 @@ defmodule RkwstWeb.Services.RequestService do
     Repo.insert(changeset)
   end
 
-  def get_by_bin_id(bin_id) do
-    Repo.all(Request, bin_id: bin_id)
+  def get(id) do
+    Repo.get(Request, id)
+  rescue
+    Ecto.Query.CastError -> nil
   end
 
   def get_all() do
     Repo.all(Request)
   end
 
+  def get_range(%{bin_id: bin_id, left: left, right: right, limit: limit}) do
+    query = from r in Request,
+              where: r.timestamp > ^left and r.timestamp < ^right and r.bin_id == ^bin_id,
+              order_by: [desc: r.timestamp],
+              limit: ^limit
+    Repo.all(query)
+  end
+
+  def get_range(%{bin_id: bin_id, left: left, limit: limit}) do
+    query = from r in Request,
+              where: r.timestamp > ^left and r.bin_id == ^bin_id,
+              order_by: [desc: r.timestamp],
+              limit: ^limit
+    Repo.all(query)
+  end
+
+  def get_range(%{bin_id: bin_id, right: right, limit: limit}) do
+    query = from r in Request,
+                 where: r.timestamp < ^right and r.bin_id == ^bin_id,
+                 order_by: [desc: r.timestamp],
+                 limit: ^limit
+    Repo.all(query)
+  end
+
+  def get_range(%{bin_id: bin_id, limit: limit}) do
+    query = from r in Request,
+                 where: r.bin_id == ^bin_id,
+                 order_by: [desc: r.timestamp],
+                 limit: ^limit
+    Repo.all(query)
+  end
 end

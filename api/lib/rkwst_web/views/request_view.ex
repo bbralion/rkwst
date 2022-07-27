@@ -5,6 +5,10 @@ defmodule RkwstWeb.RequestView do
     %{errors: %{detail: "There is no request with given id"}}
   end
 
+  def render("422.json", _assigns) do
+    %{errors: %{detail: "Request with id specified in before doesn't exist in the bin"}}
+  end
+
   def render("index.json", %{requests: requests}) do
     %{data: render_many(requests, RkwstWeb.RequestView, "request.json")}
   end
