@@ -1,8 +1,6 @@
-defmodule RkwstWeb.Plugs.BinHandler do
+defmodule RkwstWeb.Plugs.RouterForwarder do
   @behaviour Plug
   import Plug.Conn
-
-  alias RkwstWeb.Services.BinService
 
   @impl true
   def init(opts), do: opts
@@ -12,16 +10,10 @@ defmodule RkwstWeb.Plugs.BinHandler do
     case handle_host(conn) do
       nil -> RkwstWeb.Router.call(conn, opts)
       bin_endpoint ->
-        IO.puts("ENDPOINT IS")
-        IO.puts(bin_endpoint)
-        case BinService.get_bin(bin_endpoint) do
-          {:ok, bin} ->
-            BinService.save_request(conn, bin)
-          {:error} ->
-            RkwstWeb.Router.call(conn, opts)
-        end
+        conn
+        |> assign_bin(bin_endpoint)
+        |> RkwstWeb.BinRouter.call(opts)
     end
-    conn
   end
 
   defp handle_host(conn) do
@@ -31,5 +23,9 @@ defmodule RkwstWeb.Plugs.BinHandler do
       [bin_endpoint, _] -> bin_endpoint
       _ -> nil
     end
+  end
+
+  defp assign_bin(conn, bin_endpoint) do
+    assign(conn, :bin_endpoint, bin_endpoint)
   end
 end
