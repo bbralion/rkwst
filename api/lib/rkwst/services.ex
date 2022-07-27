@@ -72,13 +72,13 @@ defmodule RkwstWeb.Services.RequestService do
       %{
         ip: conn.remote_ip |> :inet.ntoa() |> to_string(),
         bin_id: bin.id,
-        proto: conn.scheme,
+        proto: Atom.to_string(conn.scheme),
         timestamp: DateTime.utc_now,
         method: conn.method,
         uri: conn.request_path,
         headers: Map.new(conn.req_headers),
         files: %{},
-        form: %{},
+        form: conn.body_params,
         body: body
       }
     )

@@ -31,7 +31,7 @@ defmodule RkwstWeb.Models.Request do
   @primary_key {:id, UUID, autogenerate: true}
   schema "requests" do
     field :ip, :string
-    field :proto, Enum, values: [:http, :https]
+    field :proto, :string
     field :timestamp, :utc_datetime
     field :method, :string
     field :uri, :string
