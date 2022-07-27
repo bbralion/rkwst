@@ -15,7 +15,7 @@ defmodule RkwstWeb.RequestController do
       nil ->
         conn
         |> put_status(:not_found)
-        |> put_view(RkwstWeb.ErrorView)
+        |> put_view(RkwstWeb.RequestView)
         |> render("404.json", [])
       %Request{} = request ->
         conn

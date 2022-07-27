@@ -27,7 +27,7 @@ defmodule RkwstWeb.BinController do
       nil ->
         conn
         |> put_status(:not_found)
-        |> put_view(RkwstWeb.ErrorView)
+        |> put_view(RkwstWeb.BinView)
         |> render("404.json", [])
       %Bin{} = bin ->
         conn

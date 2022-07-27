@@ -1,6 +1,10 @@
 defmodule RkwstWeb.RequestView do
   use RkwstWeb, :view
 
+  def render("404.json", _assigns) do
+    %{errors: %{detail: "There is no request with given id"}}
+  end
+
   def render("index.json", %{requests: requests}) do
     %{data: render_many(requests, RkwstWeb.RequestView, "request.json")}
   end
