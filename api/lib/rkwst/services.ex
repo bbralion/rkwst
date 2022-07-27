@@ -67,8 +67,8 @@ defmodule RkwstWeb.Services.RequestService do
     Repo.insert(changeset)
   end
 
-  def get(id) do
-    Repo.get(Request, id)
+  def get_by_bin_id(bin_id) do
+    Repo.all(Request, bin_id: bin_id)
   end
 
   def get_all() do

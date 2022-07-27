@@ -11,15 +11,6 @@ defmodule RkwstWeb.RequestController do
   end
 
   def show(conn, %{"id" => id}) do
-    case RequestService.get(id) do
-      nil ->
-        conn
-        |> put_status(:not_found)
-        |> put_view(RkwstWeb.RequestView)
-        |> render("404.json", [])
-      %Request{} = request ->
-        conn
-        |> render("show.json", request: request)
-    end
+    render(conn, "index.json", requests: RequestService.get_by_bin_id(id))
   end
 end
