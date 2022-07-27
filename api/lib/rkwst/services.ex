@@ -6,14 +6,32 @@ defmodule RkwstWeb.Services.BinService do
   def create() do
     bin_params = %{
       endpoint: generate_endpoint(),
-      deadline: DateTime.utc_now
+      deadline: DateTime.add(DateTime.utc_now, 3600, :seconds)
     }
     changeset = Bin.changeset(%Bin{}, bin_params)
     Repo.insert(changeset)
   end
 
+  def update(%Bin{} = bin, deadline_extension_str) do
+    max_extension = DateTime.add(bin.deadline, 1800, :second)
+    case DateTime.from_iso8601(deadline_extension_str) do
+      {:ok, deadline_extension, _offset} ->
+        case DateTime.compare(deadline_extension, max_extension) do
+          :gt -> {:error, :extending_error}
+          _ -> bin
+               |> Bin.changeset(%{deadline: deadline_extension})
+               |> Repo.update()
+        end
+      {:error, _} -> {:error, :invalid_format}
+    end
+  end
+
+
+
   def get(id) do
     Repo.get(Bin, id)
+  rescue
+    Ecto.Query.CastError -> nil
   end
 
   def get_all() do
@@ -29,8 +47,8 @@ defmodule RkwstWeb.Services.BinService do
 
   defp generate_endpoint() do
     endpoint = generate_random_string()
-      case Repo.get_by(Bin, endpoint: endpoint) do
-      nil -> endpoint
+    case get_by_endpoint(endpoint) do
+      {:error} -> endpoint
       _ -> generate_endpoint()
     end
   end

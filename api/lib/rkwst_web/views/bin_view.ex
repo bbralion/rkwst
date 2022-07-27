@@ -1,8 +1,16 @@
 defmodule RkwstWeb.BinView do
   use RkwstWeb, :view
 
+  def render("400.json", _assigns) do
+    %{errors: %{detail: "Payload or parameters are inconsistent"}}
+  end
+
   def render("404.json", _assigns) do
     %{errors: %{detail: "There is no bin with given id"}}
+  end
+
+  def render("409.json", _assigns) do
+    %{errors: %{detail: "Cannot extend the deadline further than 30 minutes from now"}}
   end
 
   def render("index.json", %{bins: bins}) do

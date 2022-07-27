@@ -22,12 +22,38 @@ defmodule RkwstWeb.BinController do
     end
   end
 
+  def update(conn, %{"id" => id, "deadline" => deadline}) do
+    case BinService.get(id) do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> render("404.json", [])
+      %Bin{} = bin ->
+        case BinService.update(bin, deadline) do
+          {:ok, bin} ->
+            conn
+            |> render("show.json", id: bin.id)
+          {:error, :extending_error} ->
+            conn
+            |> put_status(:conflict)
+            |> render("409.json", [])
+          {:error, :invalid_format} ->
+            conn
+            |> put_status(:bad_request)
+            |> render("400.json", [])
+          {:error, changeset} ->
+            conn
+            |> put_status(:unprocessable_entity)
+            |> render(RkwstWeb.ChangesetView, "error.json", changeset: changeset)
+        end
+    end
+  end
+
   def show(conn, %{"id" => id}) do
     case BinService.get(id) do
       nil ->
         conn
         |> put_status(:not_found)
-        |> put_view(RkwstWeb.BinView)
         |> render("404.json", [])
       %Bin{} = bin ->
         conn
