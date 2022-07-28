@@ -7,12 +7,15 @@ defmodule RkwstWeb.Models.Bin do
   @primary_key {:id, UUID, autogenerate: true}
   schema "bins" do
     field :endpoint, :string
+    field :created, :utc_datetime
+    field :last, :utc_datetime
     field :deadline, :utc_datetime
+    field :count, :integer
 
     has_many :requests, Models.Request
   end
 
-  @required_fields ~w(endpoint deadline)a
+  @required_fields ~w(endpoint created last deadline count)a
   @optional_fields ~w()
 
   def changeset(model, params \\ :empty) do

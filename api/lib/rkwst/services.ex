@@ -4,9 +4,13 @@ defmodule RkwstWeb.Services.BinService do
   alias RkwstWeb.Models.{Bin, Request}
 
   def create() do
+    now = DateTime.utc_now()
     bin_params = %{
       endpoint: generate_endpoint(),
-      deadline: DateTime.add(DateTime.utc_now, 3600, :seconds)
+      created: now,
+      last: now,
+      deadline: DateTime.add(now, 3600, :seconds),
+      count: 0
     }
     changeset = Bin.changeset(%Bin{}, bin_params)
     Repo.insert(changeset)
@@ -63,8 +67,9 @@ defmodule RkwstWeb.Services.RequestService do
   alias Ecto.Changeset
   alias Rkwst.Repo
   alias RkwstWeb.Models.{Bin, Request}
+  alias RkwstWeb.Services.BinService
 
-  def create(conn, bin) do
+  def create(conn, %Bin{} = bin) do
     {:ok, body, _conn} = Plug.Conn.read_body(conn)
     changeset = Request.changeset(
       %Request{},
@@ -81,7 +86,15 @@ defmodule RkwstWeb.Services.RequestService do
         body: body
       }
     )
-    Repo.insert(changeset)
+    case Repo.insert(changeset) do
+      {:ok, request} ->
+        bin
+        |> Bin.changeset(%{count: bin.count + 1, last: DateTime.utc_now})
+        |> Repo.update!()
+        {:ok, request}
+      {:error} ->
+        {:error}
+    end
   end
 
   def get(id) do

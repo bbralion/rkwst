@@ -28,7 +28,10 @@ defmodule RkwstWeb.BinView do
     %{
       id: bin.id,
       endpoint: bin.endpoint,
-      deadline: bin.deadline
+      created: bin.created,
+      deadline: bin.deadline,
+      last: bin.last,
+      count: bin.count
     }
   end
 end
