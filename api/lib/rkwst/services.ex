@@ -138,4 +138,31 @@ defmodule RkwstWeb.Services.RequestService do
                  limit: ^limit
     Repo.all(query)
   end
+
+  def get_range_timestamps(%{"after" => after_id, "before" => before_id}) do
+    case {get(after_id), get(before_id)} do
+      {%Request{} = left, %Request{} = right} ->
+        %{
+          left: left.timestamp,
+          right: right.timestamp
+        }
+      _ -> nil
+    end
+  end
+
+  def get_range_timestamps(%{"before" => before_id}) do
+    case get(before_id) do
+      %Request{} = right -> %{right: right.timestamp}
+      _ -> nil
+    end
+  end
+
+  def get_range_timestamps(%{"after" => after_id}) do
+    case get(after_id) do
+      %Request{} = left -> %{left: left.timestamp}
+      _ -> nil
+    end
+  end
+
+  def get_range_timestamps(%{}), do: %{}
 end

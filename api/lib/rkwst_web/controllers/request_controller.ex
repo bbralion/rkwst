@@ -21,7 +21,7 @@ defmodule RkwstWeb.RequestController do
   end
 
   defp show_impl(conn, %{"id" => id} = params) do
-    case get_timestamps(params) do
+    case RequestService.get_range_timestamps(params) do
       nil -> conn
              |> put_status(:unprocessable_entity)
              |> render("422.json", [])
@@ -30,40 +30,5 @@ defmodule RkwstWeb.RequestController do
         conn
         |> render("index.json", requests: RequestService.get_range(args))
     end
-  end
-
-  defp get_timestamps(%{"after" => after_id, "before" => before_id}) do
-    case {RequestService.get(after_id), RequestService.get(before_id)} do
-      {%Request{} = left, %Request{} = right} ->
-        %{
-          left: left.timestamp,
-          right: right.timestamp
-        }
-      _ -> nil
-    end
-  end
-
-  defp get_timestamps(%{"before" => before_id}) do
-    case RequestService.get(before_id) do
-      %Request{} = right ->
-        %{
-          right: right.timestamp
-        }
-      _ -> nil
-    end
-  end
-
-  defp get_timestamps(%{"after" => after_id}) do
-    case RequestService.get(after_id) do
-      %Request{} = left ->
-        %{
-          left: left.timestamp
-        }
-      _ -> nil
-    end
-  end
-
-  defp get_timestamps(%{}) do
-    %{}
   end
 end
